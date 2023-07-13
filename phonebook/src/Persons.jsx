@@ -1,6 +1,15 @@
-import React from 'react';
+import React from "react";
+import { client } from "./lib/axios";
 
-const Persons = ({ persons, searchItem }) => {
+const Persons = ({ persons, searchItem, setPersons }) => {
+  const deletePerson = (event, id) => {
+    if (window.confirm("Do you really want to delete?")) {
+      client.delete(`persons/${id}`).then(() => {
+        setPersons((old) => old.filter((person) => person.id !== id));
+      });
+    }
+  };
+
   const filteredPersons = persons.filter((person) =>
     person.name.toLowerCase().includes(searchItem.toLowerCase())
   );
@@ -9,7 +18,11 @@ const Persons = ({ persons, searchItem }) => {
     <div>
       {filteredPersons.map((person) => (
         <div key={person.id}>
-          {person.name} {person.number}
+          {person.name} {person.number}{" "}
+          <button onClick={(event) => deletePerson(event, person.id)}>
+            {" "}
+            DELETE
+          </button>
         </div>
       ))}
     </div>
