@@ -7,7 +7,7 @@ const App = () => {
   const [countries, setCountries] = useState([]);
   const [search, setSearch] = useState("");
   const [targetedCountry, setTargetedCountry] = useState(null);
-  const [weather, setWeather]=useState(null)
+  const [weather, setWeather] = useState(null);
 
   const handleSearchChange = (event) => {
     setSearch(event.target.value);
@@ -30,23 +30,22 @@ const App = () => {
     });
   };
 
-
-useEffect(() => {
-  if (targetedCountry) {
-    axios
-      .get(
-        `https://api.openweathermap.org/data/2.5/weather?lat=${targetedCountry.latlng[0]}&lon=${targetedCountry.latlng[1]}&appid=35012c4c9dc4d5116f30ec6837969940
-
-      `)
-      .then((res) => {
-        console.log(res.data);
-        setWeather(res.data);
-      })
-      .catch((error) => {
-        console.error("Failed to fetch weather data:", error);
-      });
-  }
-}, [targetedCountry]);
+  useEffect(() => {
+    if (targetedCountry) {
+      axios
+        .get(
+          `https://api.openweathermap.org/data/2.5/weather?lat=${targetedCountry.latlng[0]}&lon=${targetedCountry.latlng[1]}&appid=${process.env.REACT_APP_API_KEY}
+          `
+        )
+        .then((res) => {
+          console.log(res.data);
+          setWeather(res.data);
+        })
+        .catch((error) => {
+          console.error("Failed to fetch weather data:", error);
+        });
+    }
+  }, [targetedCountry]);
 
   return (
     <>
@@ -63,7 +62,9 @@ useEffect(() => {
             </div>
           ))}
       </div>
-      {targetedCountry && <Country weatherData={weather} countryData={targetedCountry} />}
+      {targetedCountry && (
+        <Country weatherData={weather} countryData={targetedCountry} />
+      )}
     </>
   );
 };
